@@ -1,0 +1,234 @@
+create table employee(emp_no int primary key,first_name char(50)NOT NULL,last_name char(50)NOT NULL,emp_depart char(40)NOT NULL,salary int);
+insert into employee values(101,'sonam','verma','cs',200123);
+insert into employee values(102,'sam','singh','it',572835);
+insert into employee values(103,'monu','yadav','ca',436783);
+insert into employee values(104,'sabnam','praveen','cs',674833);
+insert into employee values(105,'sohail','khan','ca',634523);
+insert into employee values(106,'ram','singh','ece',9873742);
+insert into employee values(107,'ravan','vam','ca',7842734);
+insert into employee values(108,'sarang','devil','eee',200123);
+ 
+#print_table
+select *from employee;
+
+#print_second_height_salary
+select max(salary) from employee
+where salary not in(select max(salary)from employee);
+
+#another_method;
+select max(salary) from employee
+where salary< (select max(salary) from employee);
+
+#max_salary_from_department;
+select max(salary),emp_depart from employee
+group by emp_depart;
+
+#count_rows_present_in_table
+select count(*) from employee;
+
+#count_department _wise_number
+select count(*),emp_depart from employee
+group by emp_depart;
+
+#order_by_salary_increase;
+select rownum,emp_no,first_name,last_name,emp_depart,salary from employee
+order by salary;
+
+#order_by_decrease
+select rownum,emp_no,first_name,last_name,emp_depart,salary from employee
+order by salary desc;
+
+#print_even_num_of_emp_no
+select *from(select emp_no,first_name,last_name,emp_depart,salary from employee
+order by emp_no)
+where mod(emp_no,2)=0;
+
+#print_odd_emp_no
+select *from (select emp_no,first_name,last_name,emp_depart,salary from employee
+order by emp_no)
+where mod(emp_no,2)!=0;
+
+#find_bublicate_value_and_its_frequency
+select salary,count(*) from employee
+group by salary
+having count (*)>1;
+
+#print_starts_of_letter_s
+select first_name from employee
+where first_name like 's%';
+
+#print_end_name_with_u_letter
+select first_name from employee
+where first_name like '%u';
+
+#print_start_or_end_with_name_with_m_letter
+select first_name from employee
+where first_name like '%m%';
+
+#print_not_later_m
+select first_name from employee
+where first_name not like '%m%'; 
+
+#print_exacly_four_charcter
+select last_name from employee
+where last_name like '_____';
+
+#print_second_letter_l
+select first_name from employee
+where first_name like '_a%';
+
+#print_exactly_two_ee
+select last_name from employee
+where last_name like '%ee%';
+
+#print_name_starts_with_r_and_end_with_n
+select first_name from employee
+where first_name like 'r%n';
+
+#print_second_row_of_employee_table
+select *from(select rownum r,emp_no,first_name,last_name,emp_depart,salary from employee)
+where r=2;
+
+#print_select_ramdom_row_in
+select *from(select rownum r,emp_no,first_name,last_name,emp_depart,salary from employee)
+where r in(1,4,8);
+
+#union_&_unionall
+#insert_table_sample1
+create table sample1(city char(20),country char(20));
+insert into sample1 values('hydrabad','india');
+insert into sample1 values('hydrabad','india');
+insert into sample1 values('bhutan','thimpu');
+ 
+#insert_table_sample2
+create table sample2(city char(20),country char(20));
+insert into sample2 values('hydrabad','india');
+insert into sample2 values('london','uk');
+insert into sample2 values('texas','usa');
+insert into sample2 values('california','usa');
+
+
+#union
+select city,country from sample1
+union
+select city,country from sample2
+
+#unionall
+select city,country from sample1
+union all
+select city,country from sample2
+
+#new_table_department
+create table dept(emp_no int,d_name char(20),loc char(21));
+insert into dept values (101,'account','new york');
+insert into dept values (102,'reserch','dallas');
+insert into dept values(103,'sales','chicago');
+insert into dept values(104,'operate','boston');
+
+
+#inner_join
+
+select employee.emp_no,first_name,last_name,emp_depart,salary,d_name,loc 
+from employee,dept
+where employee.emp_no=dept.emp_no;
+
+
+#print total salary department wise
+
+select emp_depart,sum(salary) from employee
+group by emp_depart;
+
+#print_left_join
+
+select rownum,dept.emp_no,first_name,last_name,emp_depart,salary,d_name,loc 
+from 
+employee
+LEFT JOIN
+dept
+on employee.emp_no=dept.emp_no;
+
+#print_Right_join
+
+select first_name,last_name,emp_depart,salary,d_name,loc,dept.emp_no 
+from 
+employee
+RIGHT JOIN
+dept
+on dept.emp_no=employee.emp_no;
+
+
+
+#print_Full_join
+
+select first_name,last_name,emp_depart,salary,d_name,loc,dept.emp_no 
+from 
+employee
+FULL JOIN
+dept
+on dept.emp_no=employee.emp_no;
+
+
+#print_cross_join
+
+select first_name,last_name,salary,d.emp_no from employee 
+cross join
+dept d
+
+#display first row and last row in a table
+
+select *from (select rownum r,first_name,last_name,salary from employee)
+where r=1 or r=(select count(*) from employee);
+
+#display last two row in a table
+
+select *from (select rownum r,first_name,last_name,salary from employee)
+where r=(select count(*) from employee) or r=(select count(*) from employee)-1;
+ 
+     another method
+     
+select *from employee
+minus
+select *from employee
+where rownum<=(select count(*)-2 from employee);
+
+#display first two rows
+
+select *from (select rownum r,first_name,last_name,salary from employee)
+where r in(1,2)
+
+#display even records
+
+select *from (select rownum r,first_name,last_name,salary from employee)
+where mod(r,2)=0;
+
+#display unique salary
+
+select *from (select distinct salary from employee order by salary desc)
+
+#display third sequence highest salary
+
+select *from (select distinct salary from employee order by salary desc)
+where rownum<=3;
+
+#display third highest salary
+
+select *from (select distinct salary from employee order by salary desc)
+where rownum<=3
+minus
+select *from (select distinct salary from employee order by salary desc)
+where rownum<3;
+
+#display common valur display beetween two coloumn
+
+select  city from coloumn1
+intersect
+select city from coloumn2
+
+#use of minus operator
+
+select city from sample1
+minus
+select city from sample2
+
+
+
